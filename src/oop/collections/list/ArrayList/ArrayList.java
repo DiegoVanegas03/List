@@ -1,6 +1,7 @@
 package oop.collections.list.ArrayList;
 
 import oop.collections.list.List;
+import oop.collections.list.Iterator;
 
  public class ArrayList implements List {
     private String[] data;
@@ -10,9 +11,19 @@ import oop.collections.list.List;
         data = new String[2];
     }
 
-    public ArrayListIterator getIterator(){
-        return new ArrayListIterator(this);
-    }
+     public Iterator getIterator() {
+         return new Iterator() {
+             private int currentIndex = 0;
+
+             public boolean hasNext() {
+                 return currentIndex < size;
+             }
+
+             public String Next() {
+                 return data[currentIndex++];
+             }
+         };
+     }
 
     public void addAtFront(String data){
         if(size == this.data.length){

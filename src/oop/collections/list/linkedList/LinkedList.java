@@ -97,25 +97,17 @@ public class LinkedList implements List {
         if(indexToRemove < 0 || indexToRemove >= size){
             return false;
         }
-
-        if (size == 1) {
-            System.out.println("Entro al primer if");
+        if(size == 1){
             head = null;
             tail = null;
-            size = 0;
-        } else if(indexToRemove == 0) {
-            System.out.println("Entro al segundo if");
-            head = head.getNext();
+        }else if(indexToRemove == 0){
+            head= head.getNext();
             head.setPrevious(null);
-        } else if (indexToRemove == size-1) {
-            System.out.println("Entro al tercer if");
-            System.out.println(tail.getData());
+        }else if(indexToRemove == size - 1){
             tail = tail.getPrevious();
             tail.setNext(null);
         }else{
-            System.out.println("Entro al cuarto if");
             Node iteratorNode = findNodeByIndex(indexToRemove);
-
             iteratorNode.getPrevious().setNext(iteratorNode.getNext());
             iteratorNode.getNext().setPrevious(iteratorNode.getPrevious());
         }

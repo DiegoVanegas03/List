@@ -33,5 +33,6 @@ public class Main {
         System.out.println("El tamano del array es: " + arrayList.getSize());
 
         linkedList.getIterator();
+        arrayList.getIterator();
     }
 }
