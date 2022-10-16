@@ -8,11 +8,11 @@ public class LinkedList implements List {
     private Node tail;
     private int size;
 
-    private static class LinkedListIterator implements Iterator {
+    private class LinkedListIterator implements Iterator {
         private Node iterator;
 
-        public LinkedListIterator(Node node){
-            this.iterator = node;
+        public LinkedListIterator(){
+            this.iterator = head;
         }
 
         public boolean hasNext(){
@@ -164,8 +164,7 @@ public class LinkedList implements List {
     }
 
     public LinkedListIterator getIterator(){
-        LinkedListIterator iterator = new LinkedListIterator(head);
-        return iterator;
+        return new LinkedListIterator();
     }
 
     private Node findNodeByIndex(int index) {
