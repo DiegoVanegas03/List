@@ -1,11 +1,34 @@
 package oop.collections.list.linkedList;
 
+import oop.collections.list.Iterator;
 import oop.collections.list.List;
 
 public class LinkedList implements List {
     private Node head;
     private Node tail;
     private int size;
+
+    private static class LinkedListIterator implements Iterator {
+        private Node iterator;
+
+        public LinkedListIterator(Node node){
+            this.iterator = node;
+        }
+
+        public boolean hasNext(){
+            return iterator.getNext() != null;
+        }
+
+        public String Next(){
+            if(iterator.getNext() != null) {
+                String data = iterator.getData();
+                iterator = iterator.getNext();
+                return data;
+            }else{
+                return null;
+            }
+        }
+    }
 
     public void addAtTail(String data){
         Node node = new Node(data);
@@ -33,6 +56,41 @@ public class LinkedList implements List {
             node.getNext().setPrevious(node);
         }
         size++;
+    }
+
+    private static class Node {
+        private String data;
+        private Node next;
+        private Node previous;
+
+
+        public Node(String data) {
+            this.data = data;
+        }
+
+        public void setNext(Node next){
+            this.next = next;
+        }
+
+        public Node getNext(){
+            return next;
+        }
+
+        public void setPrevious(Node previous) {
+            this.previous = previous;
+        }
+
+        public String getData() {
+            return data;
+        }
+
+        public void setData(String data) {
+            this.data = data;
+        }
+
+        public Node getPrevious() {
+            return previous;
+        }
     }
 
     public boolean remove(int indexToRemove){
