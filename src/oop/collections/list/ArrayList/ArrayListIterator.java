@@ -1,6 +1,7 @@
 package oop.collections.list.ArrayList;
 
-public class ArrayListIterator {
+import oop.collections.list.Iterator;
+public class ArrayListIterator implements Iterator {
     private ArrayList arrayList;
     private int currentIndex=0;
 
@@ -9,10 +10,10 @@ public class ArrayListIterator {
     }
 
     public boolean hasNext(){
-        return currentIndex < arrayList.size();
+        return currentIndex < arrayList.getSize();
     }
 
-    public String next() {
+    public String Next() {
         return arrayList.getAt(currentIndex++);
     }
 }

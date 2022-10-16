@@ -1,6 +1,8 @@
 package oop.collections.list.linkedList;
 
-public class LinkedList {
+import oop.collections.list.List;
+
+public class LinkedList implements List {
     private Node head;
     private Node tail;
     private int size;
@@ -63,14 +65,13 @@ public class LinkedList {
         return true;
     }
 
-    public boolean removeAll(){
+    public void removeAll(){
         int indexIteratorNode = 0;
         while (indexIteratorNode < size) {
             System.out.println(indexIteratorNode);
             remove(indexIteratorNode);
             indexIteratorNode++;
         }
-        return true;
     }
 
     public boolean setAt(int index, String data){
@@ -91,22 +92,16 @@ public class LinkedList {
         return node.getData();
     }
 
-    public boolean removeWithValue(String data){
+    public void removeAllWithValue(String data){
         Node iteratorNode =  head;
         int indexIteratorNode = 0;
 
         while(indexIteratorNode < size && iteratorNode.getData() == data){
             indexIteratorNode++;
         }
-        if (indexIteratorNode != size){
-            return remove(indexIteratorNode);
-        }
-        else{
-            return false;
-        }
     }
 
-    public int size(){
+    public int getSize(){
         return size;
     }
 
