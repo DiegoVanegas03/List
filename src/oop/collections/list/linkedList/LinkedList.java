@@ -48,13 +48,12 @@ public class LinkedList implements List {
         Node node = new Node(data);
 
         node.setNext(head);
-        head = node;
+        if(head != null)
+            head.setPrevious(node);
+        else
+            tail =node;
 
-        if(head == null){
-            tail = node;
-        }else{
-            node.getNext().setPrevious(node);
-        }
+        head=node;
         size++;
     }
 
@@ -116,12 +115,9 @@ public class LinkedList implements List {
     }
 
     public void removeAll(){
-        int indexIteratorNode = 0;
-        while (indexIteratorNode < size) {
-            System.out.println(indexIteratorNode);
-            remove(indexIteratorNode);
-            indexIteratorNode++;
-        }
+        head = null;
+        tail = null;
+        size = 0;
     }
 
     public boolean setAt(int index, String data){
@@ -143,11 +139,13 @@ public class LinkedList implements List {
     }
 
     public void removeAllWithValue(String data){
-        Node iteratorNode =  head;
-        int indexIteratorNode = 0;
-
-        while(indexIteratorNode < size && iteratorNode.getData() == data){
-            indexIteratorNode++;
+        int indexIterator = 0;
+        LinkedListIterator aux = this.getIterator();
+        while (aux.hasNext()){
+            if(data.equals(aux.Next()))
+                this.remove(indexIterator);
+            else
+                indexIterator++;
         }
     }
 
