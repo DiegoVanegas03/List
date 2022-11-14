@@ -1,6 +1,5 @@
-package uaslp.objetos.list.linkedlist;
+package oop.collections.list.linkedList;
 import oop.collections.list.List;
-import oop.collections.list.linkedList.LinkedList;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;

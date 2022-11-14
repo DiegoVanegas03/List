@@ -3,7 +3,7 @@ package oop.collections.list.ArrayList;
 import oop.collections.list.List;
 import oop.collections.list.Iterator;
 
- public class ArrayList implements List {
+public class ArrayList implements List {
     private String[] data;
     private int size;
 
@@ -11,19 +11,19 @@ import oop.collections.list.Iterator;
         data = new String[2];
     }
 
-     public Iterator getIterator() {
-         return new Iterator() {
-             private int currentIndex = 0;
+    public Iterator getIterator() {
+        return new Iterator() {
+            private int currentIndex = 0;
 
-             public boolean hasNext() {
-                 return currentIndex < size;
-             }
+            public boolean hasNext() {
+                return currentIndex < size;
+            }
 
-             public String Next() {
-                 return data[currentIndex++];
-             }
-         };
-     }
+            public String Next() {
+                return data[currentIndex++];
+            }
+        };
+    }
 
     public void addAtFront(String data){
         if(size == this.data.length){

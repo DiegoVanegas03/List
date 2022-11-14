@@ -1,6 +1,7 @@
 package oop.collections.list.ArrayList;
 
 import oop.collections.list.Iterator;
+
 class ArrayListIterator implements Iterator {
     private ArrayList arrayList;
     private int currentIndex=0;
