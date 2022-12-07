@@ -2,169 +2,231 @@ package oop.collections.list.linkedList;
 
 import oop.collections.list.Iterator;
 import oop.collections.list.List;
-
-public class LinkedList implements List {
-    private Node head;
-    private Node tail;
+import oop.collections.list.exceptions.NullNotAllowedException;
+import oop.collections.list.exceptions.WrongIndexException;
+public class LinkedList<E> implements List<E> {
+    private Node<E> head;
+    private Node<E> tail;
     private int size;
 
-    private class LinkedListIterator implements Iterator {
-        private Node iterator;
+    private class LinkedListIterator implements Iterator<E> {
+        private Node<E> current;
 
-        public LinkedListIterator(){
-            this.iterator = head;
+        public LinkedListIterator() {
+            current = head;
         }
 
-        public boolean hasNext(){
-            return iterator.getNext() != null;
+        @Override
+        public boolean hasNext() {
+            return current != null;
         }
 
-        public String Next(){
-            if(iterator.getNext() != null) {
-                String data = iterator.getData();
-                iterator = iterator.getNext();
+        @Override
+        public E next() {
+            if (hasNext()) {
+                E data = current.getData();
+                current = current.getNext();
                 return data;
-            }else{
+            } else {
                 return null;
             }
         }
     }
 
-    public void addAtTail(String data){
-        Node node = new Node(data);
+    @Override
+    public void addAtTail(E data) throws NullNotAllowedException{
+        if (data == null) throw new NullNotAllowedException();
 
+        Node<E> node = new Node<>(data);
         node.setPrevious(tail);
-        tail = node;
 
-        if(head == null){
+        if (tail != null) {
+            tail.setNext(node);
+        } else {
             head = node;
-        }else{
-            node.getPrevious().setNext(node);
         }
-        size ++;
-    }
 
-    public void addAtFront(String data){
-        Node node = new Node(data);
-
-        node.setNext(head);
-        if(head != null)
-            head.setPrevious(node);
-        else
-            tail =node;
-
-        head=node;
+        tail = node;
         size++;
     }
 
-    private static class Node {
-        private String data;
-        private Node next;
-        private Node previous;
+    @Override
+    public void addAtFront(E data) throws NullNotAllowedException {
+        if (data == null) throw new NullNotAllowedException();
 
+        Node<E> node = new Node<>(data);
+        node.setNext(head);
 
-        public Node(String data) {
+        if (head != null) {
+            head.setPrevious(node);
+        } else {
+            tail = node;
+        }
+
+        head = node;
+        size++;
+    }
+
+    private static class Node<E> {
+        private final E data;
+        private Node<E> next;
+        private Node<E> previous;
+
+        public Node(E data) {
             this.data = data;
         }
 
-        public void setNext(Node next){
+        public void setNext(Node<E> next) {
             this.next = next;
         }
 
-        public Node getNext(){
-            return next;
-        }
-
-        public void setPrevious(Node previous) {
+        public void setPrevious(Node<E> previous) {
             this.previous = previous;
         }
 
-        public String getData() {
-            return data;
+        public E getData() {
+            return this.data;
         }
 
-        public void setData(String data) {
-            this.data = data;
+        public Node<E> getNext() {
+            return this.next;
         }
 
-        public Node getPrevious() {
-            return previous;
+        public Node<E> getPrevious() {
+            return this.previous;
         }
     }
 
-    public boolean remove(int indexToRemove){
-        if(indexToRemove < 0 || indexToRemove >= size){
-            return false;
-        }
-        if(size == 1){
+    @Override
+    public void remove(int indexToRemove) throws WrongIndexException {
+        if (indexToRemove < 0 || indexToRemove >= size) throw new WrongIndexException();
+
+        if (size == 1) {
             head = null;
             tail = null;
-        }else if(indexToRemove == 0){
-            head= head.getNext();
-            head.setPrevious(null);
-        }else if(indexToRemove == size - 1){
-            tail = tail.getPrevious();
-            tail.setNext(null);
-        }else{
-            Node iteratorNode = findNodeByIndex(indexToRemove);
-            iteratorNode.getPrevious().setNext(iteratorNode.getNext());
-            iteratorNode.getNext().setPrevious(iteratorNode.getPrevious());
+            size = 0;
+            return;
         }
-        size--;
-        return true;
-    }
 
-    public void removeAll(){
-        head = null;
-        tail = null;
-        size = 0;
-    }
+        Node<E> nodeIterator = head;
 
-    public boolean setAt(int index, String data){
-        if(index < 0 || index >= size){
-            return false;
-        }
-        Node node = findNodeByIndex(index);
-
-        node.setData(data);
-        return true;
-    }
-
-    public String getAt(int index){
-        if(index < 0 || index >= size){
-            return null;
-        }
-        Node node = findNodeByIndex(index);
-        return node.getData();
-    }
-
-    public void removeAllWithValue(String data){
         int indexIterator = 0;
-        LinkedListIterator aux = this.getIterator();
-        while (aux.hasNext()){
-            if(data.equals(aux.Next()))
-                this.remove(indexIterator);
-            else
-                indexIterator++;
+        while (indexIterator < indexToRemove) {
+            indexIterator++;
+            nodeIterator = nodeIterator.getNext();
+        }
+
+        if (nodeIterator.getNext() != null) {
+            nodeIterator.getNext().setPrevious(nodeIterator.getPrevious());
+        } else {
+            tail = nodeIterator.getPrevious();
+            if (tail != null) {
+                tail.setNext(null);
+            }
+        }
+
+        if (nodeIterator.getPrevious() != null) {
+            nodeIterator.getPrevious().setNext(nodeIterator.getNext());
+        } else {
+            head = nodeIterator.getNext();
+            if (head != null) {
+                head.setPrevious(null);
+            }
+        }
+
+        size--;
+    }
+    @Override
+    public void removeAll() {
+        int i = 0;
+
+        while (i < size) {
+            this.remove(0);
         }
     }
 
-    public int getSize(){
-        return size;
+    @Override
+    public void setAt(int index, E data) throws WrongIndexException, NullNotAllowedException{
+        if (index < 0 || index > size) throw new WrongIndexException();
+
+        if (data == null) throw new NullNotAllowedException();
+
+        if (index == 0) {
+            addAtFront(data);
+        } else if (index == size) {
+            addAtTail(data);
+        } else {
+            Node<E> node = new Node<>(data);
+            Node<E> nodeIterator = head;
+
+            int indexIterator = 0;
+            while (indexIterator < index) {
+                indexIterator++;
+                nodeIterator = nodeIterator.getNext();
+            }
+
+            node.setNext(nodeIterator);
+            node.setPrevious(nodeIterator.getPrevious());
+            nodeIterator.setPrevious(node);
+            node.getPrevious().setNext(node);
+
+            size++;
+        }
     }
 
-    public LinkedListIterator getIterator(){
+    @Override
+    public E getAt(int index) throws WrongIndexException {
+        if (index < 0 || index >= size) throw new WrongIndexException();
+
+        Node<E> nodeIterator = head;
+
+        int indexIterator = 0;
+        while (indexIterator < index) {
+            indexIterator++;
+            nodeIterator = nodeIterator.getNext();
+        }
+
+        return nodeIterator.getData();
+    }
+
+    @Override
+    public void removeAllWithValue(E data) {
+        int indexIterator = 0;
+        Iterator<E> it = this.getIterator();
+
+        while (it.hasNext()) {
+            if (data.equals(it.next())) {
+                remove(indexIterator);
+            } else {
+                indexIterator++;
+            }
+        }
+    }
+
+    @Override
+    public int getSize() {
+        return this.size;
+    }
+
+    @Override
+    public Iterator<E> getIterator() {
         return new LinkedListIterator();
     }
 
-    private Node findNodeByIndex(int index) {
-        Node iteratorNode = head;
-        int indexIteratorNode = 0;
 
-        while (indexIteratorNode < index){
-            iteratorNode = iteratorNode.getNext();
-            indexIteratorNode++;
+    @Override
+    public String toString() {
+        if (size > 0){
+            StringBuilder result = new StringBuilder("[ ");
+            Iterator<E> listIterator = getIterator();
+            while(listIterator.hasNext()){
+                result.append(listIterator.next()).append(" - ");
+            }
+            result.delete(result.length()-3, result.length());
+            return result + " ]";
         }
-        return iteratorNode;
+        else{
+            return "Empty List";
+        }
     }
 }

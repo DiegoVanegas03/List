@@ -1,13 +1,37 @@
 package oop.collections.list;
 
-public interface List {
-    void addAtTail (String data);
-    void addAtFront(String data);
-    boolean remove(int index);
+import oop.collections.list.exceptions.NullNotAllowedException;
+import oop.collections.list.exceptions.WrongIndexException;
+
+public interface List<T> {
+
+    /**
+     * No acepta nulos
+     *
+     * @param data
+     */
+    void addAtTail(T data) throws NullNotAllowedException;
+
+    void addAtFront(T data) throws NullNotAllowedException;
+
+    void remove(int index) throws WrongIndexException;
+
     void removeAll();
-    boolean setAt(int index, String data);
-    String getAt(int index);
-    void removeAllWithValue(String data);
+
+    /**
+     * Permite colocar un elemento en un índice específico de la lista.
+     *
+     * @param index Indice del elemento a insertar
+     * @param data  Dato a colocar en la lista
+     * @return true si el indice era válido, false de lo contrario
+     */
+    void setAt(int index, T data) throws WrongIndexException, NullNotAllowedException;
+
+    T getAt(int index) throws WrongIndexException;
+
+    void removeAllWithValue(T data);
+
     int getSize();
-    Iterator getIterator();
+
+    Iterator<T> getIterator();
 }

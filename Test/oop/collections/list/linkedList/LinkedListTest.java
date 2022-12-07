@@ -1,6 +1,8 @@
+
 package oop.collections.list.linkedList;
 import oop.collections.list.List;
 
+import oop.collections.list.exceptions.WrongIndexException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
@@ -76,11 +78,9 @@ public class LinkedListTest {
         //Given:
         List linkedList = new LinkedList();
         linkedList.addAtFront("Uno");
-        //When:
-        boolean result = linkedList.remove(-1);
 
         //Then:
-        Assertions.assertFalse(result);
+        Assertions.assertThrows(WrongIndexException.class, () -> linkedList.remove(-1));
     }
 
     @Test
@@ -88,11 +88,9 @@ public class LinkedListTest {
         //Given:
         List linkedList = new LinkedList();
         linkedList.addAtFront("Uno");
-        //When:
-        boolean result = linkedList.remove(1);
 
         //Then:
-        Assertions.assertFalse(result);
+        Assertions.assertThrows(WrongIndexException.class, () -> linkedList.remove(1));
     }
 
     @Test
@@ -101,10 +99,9 @@ public class LinkedListTest {
         List linkedList = new LinkedList();
         linkedList.addAtFront("Uno");
         //When:
-        boolean result = linkedList.remove(0);
+        Assertions.assertThrows(WrongIndexException.class, () -> linkedList.remove(0));
 
         //Then:
-        Assertions.assertTrue(result);
         Assertions.assertEquals(0,linkedList.getSize());
     }
 
@@ -115,10 +112,9 @@ public class LinkedListTest {
         linkedList.addAtFront("Uno");
         linkedList.addAtFront("Dos");
         //When:
-        boolean result = linkedList.remove(0);
+        Assertions.assertThrows(WrongIndexException.class, () -> linkedList.remove(0));
 
         //Then:
-        Assertions.assertTrue(result);
         Assertions.assertEquals(1,linkedList.getSize());
         Assertions.assertEquals("Uno",linkedList.getAt(0));
     }
@@ -130,10 +126,9 @@ public class LinkedListTest {
         linkedList.addAtTail("Uno");
         linkedList.addAtTail("Dos");
         //When:
-        boolean result = linkedList.remove(1);
+        Assertions.assertThrows(WrongIndexException.class, () -> linkedList.remove(1));
 
         //Then:
-        Assertions.assertTrue(result);
         Assertions.assertEquals(1,linkedList.getSize());
         Assertions.assertEquals("Uno",linkedList.getAt(0));
     }
@@ -146,10 +141,9 @@ public class LinkedListTest {
         linkedList.addAtFront("Dos");
         linkedList.addAtTail("Tres");
         //When:
-        boolean result = linkedList.remove(1);
+        Assertions.assertThrows(WrongIndexException.class, () -> linkedList.remove(1));
 
         //Then:
-        Assertions.assertTrue(result);
         Assertions.assertEquals(2,linkedList.getSize());
         Assertions.assertEquals("Dos",linkedList.getAt(0));
         Assertions.assertEquals("Tres",linkedList.getAt(1));
@@ -192,11 +186,10 @@ public class LinkedListTest {
         linkedList.addAtFront("Dos");
         linkedList.addAtTail("Tres");
         //When:
-        boolean result = linkedList.setAt(-1,"Cuatro");
+        Assertions.assertThrows(WrongIndexException.class, () -> linkedList.setAt(-1,"Cuatro"));
 
         //Then:
         Assertions.assertEquals(3,linkedList.getSize());
-        Assertions.assertFalse(result);
     }
 
     @Test
@@ -207,11 +200,10 @@ public class LinkedListTest {
         linkedList.addAtFront("Dos");
         linkedList.addAtTail("Tres");
         //When:
-        boolean result = linkedList.setAt(3,"Cuatro");
+        Assertions.assertThrows(WrongIndexException.class, () -> linkedList.setAt(3,"Cuatro"));
 
         //Then:
         Assertions.assertEquals(3,linkedList.getSize());
-        Assertions.assertFalse(result);
     }
 
     @Test
@@ -226,6 +218,6 @@ public class LinkedListTest {
 
         //Then:
         Assertions.assertEquals(2,linkedList.getSize());
-        Assertions.assertEquals("Tres",linkedList.getAt(1));
+        Assertions.assertEquals("Tres",linkedList.getAt(1).toString());
     }
 }

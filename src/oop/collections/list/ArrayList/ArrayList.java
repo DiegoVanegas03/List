@@ -2,114 +2,152 @@ package oop.collections.list.ArrayList;
 
 import oop.collections.list.List;
 import oop.collections.list.Iterator;
-
-public class ArrayList implements List {
-    private String[] data;
+import oop.collections.list.exceptions.NullNotAllowedException;
+import oop.collections.list.exceptions.WrongIndexException;
+public class ArrayList<E> implements List <E>{
+    private E[] arrayList;
     private int size;
 
-    public ArrayList(){
-        data = new String[2];
+    @SuppressWarnings("unchecked")
+    private E[] grow() {
+        int newCapacity = arrayList.length + (arrayList.length >> 1);
+
+        E[] newArrayList = (E[]) new Object[newCapacity];
+
+        int i = 0;
+        for (E item : arrayList) {
+            newArrayList[i++] = item;
+        }
+
+        return newArrayList;
     }
 
-    public Iterator getIterator() {
-        return new Iterator() {
-            private int currentIndex = 0;
 
+    @Override
+    public String toString() {
+        if (size > 0) {
+            StringBuilder result = new StringBuilder("[");
+            for (int arrayIterator = 0; arrayIterator < size; arrayIterator++) { result.append(arrayList[arrayIterator]).append(", "); }
+            result.delete(result.length()-2, result.length());
+            return result + "]";
+        } else {
+            return "Empty List";
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public ArrayList(){
+        int defaultSize = 10;
+        arrayList = (E[]) new Object[defaultSize];
+    }
+
+    @SuppressWarnings("unchecked")
+    public ArrayList(int initialSize) {
+        arrayList = (E[]) new Object[initialSize];
+    }
+
+    public Iterator<E> getIterator () {
+        return new Iterator<>() {
+            private int currentIndex;
+
+            @Override
             public boolean hasNext() {
                 return currentIndex < size;
             }
 
-            public String Next() {
-                return data[currentIndex++];
+            @Override
+            public E next() {
+                if (hasNext()){
+                    return arrayList[currentIndex++];
+                } else {
+                    return null;
+                }
             }
         };
     }
 
-    public void addAtFront(String data){
-        if(size == this.data.length){
-            increaseArraySize();
-        }
-        for(int i= size; i>0;i-- ){
-            this.data[i] = this.data[i-1];
-        }
+    @Override
+    public void addAtFront(E data) throws NullNotAllowedException {
+        if (data == null) throw new NullNotAllowedException();
 
-        this.data[0]=data;
-        size++;
+        if (size > 0) {
+            int indexIterator = size - 1;
+            addAtTail(arrayList[indexIterator]);
+
+            while (indexIterator > 0) {
+                arrayList[indexIterator--] = arrayList[indexIterator];
+            }
+
+            arrayList[indexIterator] = data;
+        } else {
+            arrayList[size++] = data;
+        }
     }
 
-    public void addAtTail(String data){
-        if(size == this.data.length){
-            increaseArraySize();
+    @Override
+    public void addAtTail(E data) throws NullNotAllowedException {
+        if (data == null) throw new NullNotAllowedException();
+
+        if (size == arrayList.length) {
+            arrayList = grow();
         }
-        this.data[size] = data;
-        size++;
+
+        arrayList[size++] = data;
     }
 
-    public void increaseArraySize(){
-        String []newArray = new String[this.data.length *2];
-
-        for(int i=0; i<data.length;i++){
-            newArray[i] =data[i];
+    @Override
+    public void remove(int indexToRemove) throws WrongIndexException {
+        if (indexToRemove < 0 || indexToRemove >= size) {
+            throw new WrongIndexException();
         }
 
-        data=newArray;
-    }
-
-    public boolean remove(int indexToRemove){
-
-        if(indexToRemove <0 || indexToRemove >= size) {
-            return false;
+        for (int indexIt = indexToRemove; indexIt < size-1; indexIt++) {
+            arrayList[indexIt] = arrayList[indexIt+1];
         }
 
-        for(int i= indexToRemove; i<size ; i++){
-            data[i]=data[i+1];
-        }
-
+        arrayList[size-1] = null;
         size--;
-        data[size]=null;
-
-        return true;
     }
 
-    public void removeAll(){
-        for (int i=0; i<size; i++){
-            data[i]=null;
-        }
+    @SuppressWarnings("unchecked")
+    @Override
+    public void removeAll() {
+        int oldCapacity = arrayList.length;
+        arrayList = (E[]) new Object[oldCapacity];
         size = 0;
     }
 
-    public void removeAllWithValue(String value){
-        String []newArray = new String[data.length];
-        int cont = 0;
-        for(int i=0; i<size; i++){
-            if (!data[i].equals(value)) {
-                newArray[cont++] = data[i];
+    @Override
+    public void removeAllWithValue(E data) {
+        int indexIterator = 0;
+        while (indexIterator < size) {
+            if (arrayList[indexIterator].equals(data)) {
+                remove(indexIterator);
+            } else {
+                indexIterator++;
             }
         }
-
-        this.data=newArray;
-        size= cont;
     }
 
-    public boolean setAt(int index, String data){
-        if(index<0 || index >= size){
-            return false;
-        }
+    @Override
+    public void setAt(int index, E data) throws WrongIndexException, NullNotAllowedException {
+        if (index < 0 || index >= size) throw new WrongIndexException();
 
-        this.data[index]=data;
+        if (data == null) throw new NullNotAllowedException();
 
-        return true;
+        arrayList[index] = data;
     }
 
-    public String getAt(int index) {
-        if(index<0 || index >= size){
-            return null;
-        }
+    @Override
+    public E getAt(int index) throws WrongIndexException {
+        if (index < 0 || index >= size) throw new WrongIndexException();
 
-        return this.data[index];
+        return arrayList[index];
     }
 
-    public int getSize(){
-        return size;
+    @Override
+    public int getSize() {
+        return this.size;
     }
+
 }

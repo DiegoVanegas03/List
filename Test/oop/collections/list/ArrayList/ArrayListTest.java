@@ -4,8 +4,10 @@ import oop.collections.list.Iterator;
 import oop.collections.list.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import oop.collections.list.exceptions.NullNotAllowedException;
+import oop.collections.list.exceptions.WrongIndexException;
 
-import java.sql.Array;
+
 
 public class ArrayListTest {
     @Test
@@ -102,11 +104,10 @@ public class ArrayListTest {
         arrayList.addAtTail("Dos");
         arrayList.addAtTail("Tres");
         //When:
-        boolean result = arrayList.remove(-1);
+        Assertions.assertThrows(NullNotAllowedException.class, () -> arrayList.remove(-1));
 
         //Then:
         Assertions.assertEquals(3,arrayList.getSize());
-        Assertions.assertFalse(result);
     }
 
     @Test
@@ -117,11 +118,10 @@ public class ArrayListTest {
         arrayList.addAtTail("Dos");
         arrayList.addAtTail("Tres");
         //When:
-        boolean result = arrayList.remove(3);
+        Assertions.assertThrows(NullNotAllowedException.class, () -> arrayList.remove(3));
 
         //Then:
         Assertions.assertEquals(3,arrayList.getSize());
-        Assertions.assertFalse(result);
     }
 
     @Test
@@ -132,11 +132,10 @@ public class ArrayListTest {
         arrayList.addAtTail("Dos");
         arrayList.addAtTail("Tres");
         //When:
-        boolean result = arrayList.remove(0);
+        arrayList.remove(0);
 
         //Then:
         Assertions.assertEquals(2,arrayList.getSize());
-        Assertions.assertTrue(result);
     }
 
     @Test
@@ -147,10 +146,10 @@ public class ArrayListTest {
         arrayList.addAtTail("Dos");
         arrayList.addAtTail("Tres");
         //When:
-        boolean result = arrayList.setAt(-1,"Cuatro");
+        Assertions.assertThrows(NullNotAllowedException.class, () -> arrayList.setAt(-1,"null"));
 
         //Then:
-        Assertions.assertFalse(result);
+
     }
 
     @Test
@@ -161,10 +160,9 @@ public class ArrayListTest {
         arrayList.addAtTail("Dos");
         arrayList.addAtTail("Tres");
         //When:
-        boolean result = arrayList.setAt(2,"Cuatro");
+        arrayList.setAt(2,"Cuatro");
 
         //Then:
-        Assertions.assertTrue(result);
         Assertions.assertEquals("Cuatro",arrayList.getAt(2));
     }
 
@@ -176,10 +174,9 @@ public class ArrayListTest {
         arrayList.addAtTail("Dos");
         arrayList.addAtTail("Tres");
         //When:
-        boolean result = Boolean.parseBoolean(arrayList.getAt(-1));
+        Assertions.assertThrows(NullNotAllowedException.class, () -> arrayList.getAt(-1));
 
         //Then:
-        Assertions.assertFalse(result);
     }
 
     @Test
@@ -205,7 +202,7 @@ public class ArrayListTest {
         arrayList.addAtTail("Tres");
         //When:
         Iterator iterator = arrayList.getIterator();
-        String result = iterator.Next();
+        String result = iterator.next().toString();
         //Then:
         Assertions.assertEquals("Uno",result);
     }
@@ -215,9 +212,8 @@ public class ArrayListTest {
         //Given:
         List arraylist = new ArrayList();
         arraylist.addAtTail("Uno");
-        ArrayListIterator Iterator = new ArrayListIterator((ArrayList) arraylist);
         //When:
-        boolean result = Iterator.hasNext();
+        boolean result = arraylist.getIterator().hasNext();
         //Then:
         Assertions.assertTrue(result);
     }
@@ -227,9 +223,8 @@ public class ArrayListTest {
         //Given:
         List arraylist = new ArrayList();
         arraylist.addAtTail("Uno");
-        ArrayListIterator Iterator = new ArrayListIterator((ArrayList) arraylist);
         //When:
-        String result = Iterator.Next();
+        String result = arraylist.getIterator().next().toString();
         //Then:
         Assertions.assertEquals("Uno",result);
     }
